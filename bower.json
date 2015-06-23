@@ -1,0 +1,19 @@
+{
+  "name": "compCarousel",
+  "version": "0.0.0",
+  "homepage": "https://github.com/GYF1/compCarousel",
+  "authors": [
+    "GYF1 <guoyinfeng@live.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0"
+  }
+}
