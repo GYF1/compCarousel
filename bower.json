@@ -14,7 +14,11 @@
     "tests",
     "doc",
     "img",
-    "src"
+    "src",
+    "index.html",
+    "WebComponent.html",
+    "package.json",
+    "gulpfile.js"
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^1.0.0"
