@@ -1,10 +1,10 @@
-var compCarousel = (function (root, doc) {
+(function (root, doc) {
   'use strict';
 
-  var pageNums = [], timer;
+  var compCarousel = {}, utils = {}, pageNums = [], timer;
 
   //get first child skip TextNodes
-  var getFirstChild = function (el) {
+  utils.getFirstChild = function (el) {
     var firstChild = el.firstChild;
     while (firstChild !== null && firstChild.nodeType === 3) {
       firstChild = firstChild.nextSibling;
@@ -12,18 +12,18 @@ var compCarousel = (function (root, doc) {
     return firstChild;
   };
 
-  var extend = function (dest, src) {
+  utils.extend = function (dest, src) {
     for (var property in src) {
       dest[property] = src[property];
     }
     return dest;
   };
 
-  var currentStyle = function (element) {
+  utils.currentStyle = function (element) {
     return element.currentStyle || doc.defaultView.getComputedStyle(element, null);
   };
 
-  var bind = function (object, fun) {
+  utils.bind = function (object, fun) {
     var args = Array.prototype.slice.call(arguments).slice(2);
     return function () {
       return fun.apply(object, args.concat(Array.prototype.slice.call(arguments)));
@@ -33,7 +33,7 @@ var compCarousel = (function (root, doc) {
   function CarouselClass(container, options) {
 
     this._container = doc.getElementById(container);
-    this._slider = getFirstChild(this._container);
+    this._slider = utils.getFirstChild(this._container);
 
     //切换数量
     this._count = Math.abs(this._slider.children.length);
@@ -58,7 +58,7 @@ var compCarousel = (function (root, doc) {
     this.Pause = Math.abs(this.options.Pause);
 
     //样式设置
-    var p = currentStyle(this._container).position;
+    var p = utils.currentStyle(this._container).position;
 
     //如果不是相对或绝对定位会同时设置position为relative
     p === 'relative' || p === 'absolute' || (this._container.style.position = 'relative');
@@ -72,7 +72,6 @@ var compCarousel = (function (root, doc) {
     //如果没有设置Change切换参数属性，会自动根据滑动对象获取：
     this.stepSize = this._slider.offsetHeight / this._count;
   }
-
 
   CarouselClass.prototype = {
     /**
@@ -96,7 +95,7 @@ var compCarousel = (function (root, doc) {
         //每当一个完整图片滑动完了，停顿下
         Pause: 2000
       };
-      extend(this.options, options || {});
+      utils.extend(this.options, options || {});
     },
 
     run: function (index) {
@@ -105,7 +104,7 @@ var compCarousel = (function (root, doc) {
 
       this._target = -Math.abs(this.stepSize) * (this.Index = index);
       this.moveTimeCounter = 0;
-      this.currentPosition = parseInt(currentStyle(this._slider).top);
+      this.currentPosition = parseInt(utils.currentStyle(this._slider).top);
       this.moveDistance = this._target - this.currentPosition;
 
       for (var i = 0, len = pageNums.length; i < len; i++) {
@@ -133,10 +132,10 @@ var compCarousel = (function (root, doc) {
       if (this.moveDistance && this.moveTimeCounter < this.Duration) {
         var tweenval = this.tween(this.moveTimeCounter++, this.currentPosition, this.moveDistance, this.Duration);
         this.moveSomeDistance(Math.round(tweenval));
-        this._timer = setTimeout(bind(this, this.move), this.Time);
+        this._timer = setTimeout(utils.bind(this, this.move), this.Time);
       } else {
         this.moveSomeDistance(this._target);
-        this.Auto && (this._timer = setTimeout(bind(this, this.next), this.Pause));
+        this.Auto && (this._timer = setTimeout(utils.bind(this, this.next), this.Pause));
       }
     },
 
@@ -182,12 +181,11 @@ var compCarousel = (function (root, doc) {
     }
   };
 
-  return {
-    init: function (container, options) {
-      var carouselInstance = new CarouselClass(container, options);
-      carouselInstance.addPageNumbers();
-      carouselInstance.run();
-    }
+  compCarousel.init = function (container, options) {
+    var carouselInstance = new CarouselClass(container, options);
+    carouselInstance.addPageNumbers();
+    carouselInstance.run();
   };
 
+  root.compCarousel = compCarousel;
 })(window, document);
