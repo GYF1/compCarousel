@@ -3,7 +3,6 @@
 
   var compCarousel = {}, utils = {}, pageNums = [], timer;
 
-
   //get first child skip TextNodes
   utils.getFirstChild = function (el) {
     var firstChild = el.firstChild;
